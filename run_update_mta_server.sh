@@ -1,1 +1,1 @@
-python update_mta_server.py
+python updater.py
