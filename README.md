@@ -4,8 +4,9 @@ Script for updating MTA Server on any machine
 
 ## Requirements
 
-Python 3 (tested with 3.10)
-Python Pip to install the required modules
+- Python 3 (tested with 3.10)
+
+- Python Pip to install the required modules
 
 ## Tutorial
 
