@@ -204,12 +204,22 @@ def clear_folder(folder):
             for file in files:
                 os.remove(os.path.join(root, file))
 
-def main():
+if __name__ == "__main__":
     try:
+        
         print("\n---- MTA Server Updater by Fernando ----")
         print(f"\nOS: {OS_SYSTEM} | 64-bit: {IS_64_BIT} | ARM: {IS_ARM}")
-
-        server_folder = ask_for_server_folder()
+        
+        args = sys.argv[1:]
+        provided_server_folder = args[0] if args else None
+        if provided_server_folder:
+            if not os.path.exists(provided_server_folder):
+                print(f"The provided server folder path does not exist: {provided_server_folder}")
+                exit(1)
+            server_folder = provided_server_folder
+            print(f"\nUsing provided server folder: {server_folder}")
+        else:
+            server_folder = ask_for_server_folder()
         
         url = fetch_exe_url()
         
@@ -230,6 +240,3 @@ def main():
 
     except Exception as e:
         print(traceback.format_exc())
-
-if __name__ == "__main__":
-    main()
