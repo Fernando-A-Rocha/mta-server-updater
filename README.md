@@ -23,7 +23,7 @@ python updater.py
 ```py
 # Run the script passing a server folder path as an argument
 python updater.py /path/to/server/folder
-# e.g. python updater.py "C:\Users\me\Documents\_MTASA\_SERVERS\Testing1\server
+# e.g. python updater.py "C:\Users\me\Documents\_MTASA\_SERVERS\Testing1\server"
 ```
 
 Alternatively:
