@@ -157,6 +157,10 @@ def download_file(url, dest_folder):
 
 def extract_files(file_path, dest_folder):
     if file_path.endswith(".exe"):
+        # Check if 7z is in PATH
+        if shutil.which('7z') is None:
+            print("7z is required to extract the downloaded file. Please install 7z and add it to PATH.")
+            exit(1)
         # Extract only the "server" folder
         command = ['7z', 'x', file_path, 'server/*', f'-o{dest_folder}', '-y']
         subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
