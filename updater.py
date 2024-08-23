@@ -2,8 +2,8 @@
 # extracts the server files and updates the server binaries in the specified folder.
 #
 # Author: Fernando
-# Version: 1.0
-# Last updated: 2024-07-29
+# Version: 1.1
+# Last updated: 2024-08-23
 
 try:
     import os
@@ -15,6 +15,7 @@ try:
     import traceback
     import tarfile
     from bs4 import BeautifulSoup
+    import datetime
 except ImportError as e:
     print("You are missing the following module(s):", e.name)
     exit(1)
@@ -194,6 +195,14 @@ def update_server(updateinfo_folder, server_folder):
         os.remove(dest_server_exe)
     shutil.copy2(server_exe, dest_server_exe)
 
+def log_update(server_folder, url):
+    file_from_url = url.split('/')[-1]
+    log_filename = "updates.log"
+    log_file = os.path.join(server_folder, log_filename)
+    today_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(log_file, 'a') as f:
+        f.write(f"{today_date} - Server updated with {file_from_url} | Python MTA Server Updater\n")
+
 def delete_folder(folder):
     if os.path.exists(folder) and os.path.isdir(folder):
         shutil.rmtree(folder)
@@ -221,6 +230,8 @@ if __name__ == "__main__":
         else:
             server_folder = ask_for_server_folder()
         
+        print("\nBeginning the update process...")
+
         url = fetch_exe_url()
         
         updateinfo_folder = prepare_updateinfo_folder(server_folder)
@@ -233,6 +244,8 @@ if __name__ == "__main__":
         extract_files(downloaded_file, updateinfo_folder)
 
         update_server(updateinfo_folder, server_folder)
+
+        log_update(server_folder, url)
 
         delete_folder(updateinfo_folder)
 
