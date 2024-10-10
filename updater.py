@@ -2,8 +2,8 @@
 # extracts the server files and updates the server binaries in the specified folder.
 #
 # Author: Fernando
-# Version: 1.1
-# Last updated: 2024-08-23
+# Version: 1.2
+# Last updated: 2024-10-10
 
 try:
     import os
