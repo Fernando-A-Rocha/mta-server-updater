@@ -121,8 +121,12 @@ def ask_for_server_folder():
 
 def fetch_exe_url():
     nightly_url = "https://nightly.multitheftauto.com/"
-    page = requests.get(nightly_url)
-    soup = BeautifulSoup(page.content, 'html.parser')
+    response = requests.get(nightly_url)
+    if response.status_code != 200:
+        print(f"Error fetching the nightly builds page: Website responded with code {response.status_code}")
+        exit(1)
+    
+    soup = BeautifulSoup(response.content, 'html.parser')
 
     # Find the td element with the text
     td = soup.find('td', string=BUILD_STRING)

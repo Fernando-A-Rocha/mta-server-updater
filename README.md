@@ -8,6 +8,8 @@ Script for updating MTA Server on any machine
 
 - Python Pip to install the required modules
 
+- 7-Zip installed and added to the PATH
+
 ## Tutorial
 
 ```py
