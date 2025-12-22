@@ -1,9 +1,9 @@
 # Description: This script downloads the latest MTA Server nightly build for the current OS and architecture,
 # extracts the server files and updates the server binaries in the specified folder.
 #
-# Author: Fernando
-# Version: 1.2
-# Last updated: 2024-10-10
+# Author: Fernando A. Rocha
+# Version: 1.3
+# Last updated: December 22, 2025
 
 try:
     import os
@@ -128,18 +128,45 @@ def fetch_exe_url():
     
     soup = BeautifulSoup(response.content, 'html.parser')
 
-    # Find the td element with the text
-    td = soup.find('td', string=BUILD_STRING)
-    # Find table after the td element
-    table = td.find_next('table')
-    # Find the first tr in the table with class file and without display: none
-    tr = table.find('tr', class_='file', style=lambda x: x is None)
-    # Find the first a element in the tr
-    a = tr.find('a')
-    # Get the href attribute of the a element
-    href = a['href']
+    # Find all td elements that match the build string
+    tds = soup.find_all('td', string=BUILD_STRING)
+    if not tds:
+        print(f"Could not find any entries for build '{BUILD_STRING}'.")
+        exit(1)
 
-    final_url = f"{nightly_url}{href}"
+    # Collect hrefs from each matching td
+    hrefs = []
+    for td in tds:
+        table = td.find_next('table')
+        if not table:
+            continue
+        tr = table.find('tr', class_='file', style=lambda x: x is None)
+        if not tr:
+            continue
+        a = tr.find('a')
+        if a and a.get('href'):
+            hrefs.append(a['href'])
+
+    if not hrefs:
+        print(f"No download links found for build '{BUILD_STRING}'.")
+        exit(1)
+
+    # Let the user choose when multiple builds are available
+    selected_href = hrefs[0]
+    if len(hrefs) > 1:
+        print(f"\nFound multiple nightly builds for {BUILD_STRING}:")
+        for idx, href in enumerate(hrefs):
+            print(f"  [{idx}] {nightly_url}{href}")
+        while True:
+            selection = input(f"Select build index (0-{len(hrefs) - 1}): ").strip()
+            if selection.isdigit():
+                selection = int(selection)
+                if 0 <= selection < len(hrefs):
+                    selected_href = hrefs[selection]
+                    break
+            print("Invalid selection. Please enter a valid index.")
+
+    final_url = f"{nightly_url}{selected_href}"
 
     print(f"\nLatest nightly build found: {BUILD_STRING} @ {final_url}")
     return final_url
